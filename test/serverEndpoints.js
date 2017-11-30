@@ -1,6 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const server = require('../server/index.js');
+const server = require('../server');
 const should = chai.should();
 
 chai.use(chaiHttp);
@@ -12,8 +12,15 @@ describe('API endpoints', function() {
     });
   })
   describe('Microservice', function() {
-    xit('should provide a stringified object upon a succes', function() {
-
+    it('should provide a 200 status on /* GET', function() {
+      chai.request(server)
+        .get('/1450137600')
+        .end(function(err, res) {
+          console.log(res);
+          console.log(err);
+          res.should.have.status(200)
+          .done();
+        });
     });
   });
 });
