@@ -24,16 +24,17 @@ const server = http.createServer(function(req, res) {
   const pUrl = url.parse(req.url, true);
   console.log(pUrl);
   let dateQuery;
+
   let timeStamp = {
-    naturalDate: null,
-    unixDate: null
+    unix: null,
+    natural: null
   }
   if (req.method === 'GET' && pUrl.path === '/') {
     statusCode = 200;
   } else if (req.method === 'GET' && pUrl.path !== '/') {
-    statuscCode = 404;
+    statuscCode = 200;
     dateQuery = pUrl.path.slice(1);
-
+    res.end(JSON.stringify(timeStamp));
   } else {
     // throw error for POSTS/UPDATES/DELETES
     statusCode = 404;
@@ -41,6 +42,7 @@ const server = http.createServer(function(req, res) {
   res.writeHead(statusCode);
   console.log('STATUS CODE :' + res.statusCode);
   console.log('HEADER : ' + res.headers);
+  console.log('BODY: ' + res.body);
   res.end();
 });
 

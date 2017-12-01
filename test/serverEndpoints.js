@@ -1,68 +1,37 @@
-const supertest = require('supertest');
+const request = require('request');
 const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../server/index.js');
-// const sinon = require('sinon');
-const should = chai.should();
 const expect = chai.expect;
-const request = supertest(server);
 
-describe('API endpoints', function() {
-  describe('Main Page', function(){
-    xit('should send index.html on / GET', function() {
+describe('server', function() {
+  const query = 1450137600;
 
+  it('should respond to GET requests for /* 200 status code', function(done) {
+    request('http://127.0.0.1:3000/' + query, function(error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      done();
     });
-  })
-  describe('Microservice valid endpoints', function() {
-    this.timeout(5000);
-    it('should provide a 200 status on /* GET', function() {
-      request.get('/1450137600')
-      // .expect(404)
-      .end(function(err,res) {
-        expect(res.body).to.have.lengthOf(2);
-        done(err);
-      });
+  });
+
+  it('should send back parsable stringified JSON', function(done) {
+    request('http://127.0.0.1:3000/' + query, function(error, response, body) {
+      expect(JSON.parse.bind(this, body)).to.not.throw();
+      done();
     });
-    xit('should provide json response on /* GET', function() {
-      return chai.request(server)
-        .get('/1450137600')
-        .end(function(err, res) {
-          res.should.be.json;
-          done();
-        });
+  });
+
+  it('should send back an object', function(done) {
+    request('http://127.0.0.1:3000/' + query, function(error, response, body) {
+      console.log(body);
+      var parsedBody = JSON.parse(body);
+      expect(parsedBody).to.be.an('object');
+      done();
     });
-    xit('json, when parsed should be an object on /* GET', function() {
-      return chai.request(server)
-        .get('/1450137600')
-        .end(function(err, res) {
-          res.body.should.be.a('number');
-          done();
-        });
-    });
-    xit('object should have correct unixTime on /* GET', function() {
-      return chai.request(server)
-        .get('/1450137600')
-        .end(function(err, res) {
-          console.log(res.body);
-          req.body.unixDate.should.equal(1450137600);
-          done();
-        });
-    });
-    it('json, when parsed should be an object on /* GET', function() {
-      chai.request(server)
-        .get('/1450137600')
-        .end(function(err, res) {
-          res.body.should.be.a('string');
-          done();
-        });
-    });
-    it('object should have properties with \'null\' values if invalid URL', function() {
-      chai.request(server)
-        .get('/1450137600')
-        .end(function(err, res) {
-          ob
-          done();
-        });
+  });
+  xit('sent object should have properties "unix" and "natural"', function(done) {
+    request('http://127.0.0.1:3000/' + query, function(error, response, body) {
+      var parsedBody = JSON.parse(body);
+      expect(parsedBody).to.be.an('object');
+      done();
     });
   });
 });
