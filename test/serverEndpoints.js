@@ -16,7 +16,7 @@ describe('server', function() {
     const validUnixQuery = 1450137600;
     const validNaturalQuery = 'December 15, 2015';
     const invalidUnixQuery = '14501a7600';
-    const invalidNaturalQuery = '';
+    const invalidNaturalQuery = 'dember15,202';
 
     describe('all queries', function() {
       it('should respond to GET requests for /timestamp/:date 200 status code', function(done) {
@@ -49,66 +49,36 @@ describe('server', function() {
       });
     });
     describe('valid queries', function() {
-      it('should return an object with appropriate values for unix and natural properties', function() {
+      it('should return an object with appropriate values for unix and natural properties', function(done) {
         request('http://127.0.0.1:3000/timestamp/' + validUnixQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
           expect(parsedBody.natural).to.equal('December 15, 2015');
-          espect(parsedBody.unix).to.equal(1450137600);
-          done();
+          expect(parsedBody.unix).to.equal(1450137600);
+
         });
         request('http://127.0.0.1:3000/timestamp/' + validNaturalQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
           expect(parsedBody.natural).to.equal('December 15, 2015');
-          expect(parsedBody.unix).to.equal(1450137600);
+          expect(parsedBody.unix).to.equal(1450166400);
           done();
         });
       });
     });
     describe('invalid queries', function() {
-      it('should return an object with null values for unix and natural properties', function() {
+      it('should return an object with null values for unix and natural properties', function(done) {
         request('http://127.0.0.1:3000/timestamp/' + invalidUnixQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody.natural).to.equal(null);
+          expect(parsedBody.unix).to.equal(null);
+
+        });
+        request('http://127.0.0.1:3000/timestamp/' + invalidNaturalQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
           expect(parsedBody.natural).to.equal(null);
           expect(parsedBody.unix).to.equal(null);
           done();
         });
-        request('http://127.0.0.1:3000/timestamp/' + invalidNaturalQuery, function(error, response, body) {
-          var parsedBody = JSON.parse(body);
-          expect(parsedBody.natural).to.equal(null);
-          espect(parsedBody.unix).to.equal(null);
-          done();
-        });
       });
     })
-  });
-  describe('request header parser microservice', function() {
-    it('should respond to GET requests for /request-header-parser/ 200 status code', function(done) {
-      request('http://127.0.0.1:3000/request-header-parser/', function(error, response, body) {
-        expect(response.statusCode).to.equal(200);
-        done();
-      });
-    });
-
-    it('should send back parsable stringified JSON', function(done) {
-      request('http://127.0.0.1:3000/request-header-parser/', function(error, response, body) {
-        expect(JSON.parse.bind(this, body)).to.not.throw();
-        done();
-      });
-    });
-
-    it('should send back an object', function(done) {
-      request('http://127.0.0.1:3000/request-header-parser/', function(error, response, body) {
-        var parsedBody = JSON.parse(body);
-        expect(parsedBody).to.be.an('object');
-        done();
-      });
-    });
-    it('sent object should have properties "ipaddress" "language" and "software"', function(done) {
-      request('http://127.0.0.1:3000/request-header-parser/', function(error, response, body) {
-        var parsedBody = JSON.parse(body);
-        expect(parsedBody).to.have.keys('ipaddress', 'language', 'software');
-        done();
-      });
-    });
   });
 });

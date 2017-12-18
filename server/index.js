@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
   res.status(200).sendFile(path.join(__dirname + '/../index.html'));
 });
 
-app.get('/:date', (req, res) => {
+app.get('/timestamp/:date', (req, res) => { // timestamp endpoint
     let dateQuery = req.params.date; // get dateQuery
     if (isNaN(dateQuery)) {
       dateQuery = Date.parse(dateQuery);// if not already unix, attempt parsedate
@@ -18,7 +18,17 @@ app.get('/:date', (req, res) => {
     }
 
     const timeStamp = helpers.processDate(dateQuery); // create timestamp from
-    res.status(200).send(JSON.stringify(timeStamp)); // send with a 200 status
+    res.status(200).json(timeStamp); // send with a 200 status
+});
+
+app.get('/request-header-parser/*', (req, res) => {
+  const parserObj = helpers.createHeadersObject(req.connection.remoteAddress,
+  req.headers['accept-language'], req.headers['user-agent']);
+  console.log('PARSEROBJ = ', parserObj);
+  console.log('PARSEOBJ TYPE ', typeof parserObj);
+  res.status(200);
+  console.log(res.statusCode);
+  res.send(JSON.stringify(parserObj));
 });
 
 app.listen(PORT, () => {
