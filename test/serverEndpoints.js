@@ -14,7 +14,7 @@ describe('server', function() {
   });
   describe('timestamp microservice', function() {
     const validUnixQuery = 1450137600;
-    const validNaturalQuery = '';
+    const validNaturalQuery = 'December 15, 2015';
     const invalidUnixQuery = '14501a7600';
     const invalidNaturalQuery = '';
 
@@ -43,7 +43,7 @@ describe('server', function() {
       it('sent object should have properties "unix" and "natural"', function(done) {
         request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
-          expect(parsedBody).to.have.all.keys('natural', 'unix');
+          expect(parsedBody).to.have.keys('natural', 'unix');
           done();
         });
       });
@@ -52,14 +52,14 @@ describe('server', function() {
       it('should return an object with appropriate values for unix and natural properties', function() {
         request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
-          expect(parsedBody.natural).to.equal(null);
+          expect(parsedBody.natural).to.equal('December 15, 2015');
           espect(parsedBody.unix).to.equal(1450137600);
           done();
         });
         request('http://127.0.0.1:3000/' + validNaturalQuery, function(error, response, body) {
           var parsedBody = JSON.parse(body);
-          expect(parsedBody.natural).to.equal(null);
-          espect(parsedBody.unix).to.equal(1450137600);
+          expect(parsedBody.natural).to.equal('December 15, 2015');
+          expect(parsedBody.unix).to.equal(1450137600);
           done();
         });
       });
