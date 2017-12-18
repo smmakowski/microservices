@@ -6,19 +6,20 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 
 app.get('/*', (req, res) => {
-  if (req.url.slice(1) === ''){
+  if (req.url.slice(1) === '') { // if no query send .html file
     res.sendFile(path.join(__dirname + '/../index.html'));
   } else { // else process the time;
     let dateQuery = req.url.slice(1); // get dateQuery
     if (isNaN(dateQuery)) {
-      // do nothing
+      dateQuery = Date.parse(dateQuery);// if not already unix, attempt parsedate
+      console.log('ATTEMPTED TO PARSE STRING DATE TO = ', dateQuery);
     } else {
-      dateQuery = parseInt(dateQuery, 10);
+      dateQuery = parseInt(dateQuery, 10) * 1000; // bc Date const use ms, multiply
     }
-    console.log(typeof dateQuery);
-    const timeStamp = helpers.processDate(dateQuery);
+
+    const timeStamp = helpers.processDate(dateQuery); // create timestamp from
     console.log('TimeStamp = ', timeStamp);
-    res.send('dateQUery is =' +timeStamp);
+    res.send(timeStamp);
   }
 });
 
