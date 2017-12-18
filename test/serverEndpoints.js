@@ -13,34 +13,72 @@ describe('server', function() {
     });
   });
   describe('timestamp microservice', function() {
-    const query = 1450137600;
-    it('should respond to GET requests for /* 200 status code', function(done) {
-      request('http://127.0.0.1:3000/' + query, function(error, response, body) {
-        expect(response.statusCode).to.equal(200);
-        done();
-      });
-    });
+    const validUnixQuery = 1450137600;
+    const validNaturalQuery = '';
+    const invalidUnixQuery = '14501a7600';
+    const invalidNaturalQuery = '';
 
-    it('should send back parsable stringified JSON', function(done) {
-      request('http://127.0.0.1:3000/' + query, function(error, response, body) {
-        expect(JSON.parse.bind(this, body)).to.not.throw();
-        done();
+    describe('all queries', function() {
+      it('should respond to GET requests for /* 200 status code', function(done) {
+        request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
+          expect(response.statusCode).to.equal(200);
+          done();
+        });
       });
-    });
 
-    it('should send back an object', function(done) {
-      request('http://127.0.0.1:3000/' + query, function(error, response, body) {
-        var parsedBody = JSON.parse(body);
-        expect(parsedBody).to.be.an('object');
-        done();
+      it('should send back parsable stringified JSON', function(done) {
+        request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
+          expect(JSON.parse.bind(this, body)).to.not.throw();
+          done();
+        });
+      });
+
+      it('should send back an object', function(done) {
+        request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody).to.be.an('object');
+          done();
+        });
+      });
+      it('sent object should have properties "unix" and "natural"', function(done) {
+        request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody).to.have.all.keys('natural', 'unix');
+          done();
+        });
       });
     });
-    it('sent object should have properties "unix" and "natural"', function(done) {
-      request('http://127.0.0.1:3000/' + query, function(error, response, body) {
-        var parsedBody = JSON.parse(body);
-        expect(parsedBody).to.have.all.keys('natural', 'unix');
-        done();
+    describe('valid queries', function() {
+      it('should return an object with appropriate values for unix and natural properties', function() {
+        request('http://127.0.0.1:3000/' + validUnixQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody.natural).to.equal(null);
+          espect(parsedBody.unix).to.equal(1450137600);
+          done();
+        });
+        request('http://127.0.0.1:3000/' + validNaturalQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody.natural).to.equal(null);
+          espect(parsedBody.unix).to.equal(1450137600);
+          done();
+        });
       });
     });
+    describe('invalid queries', function() {
+      it('should return an object with null values for unix and natural properties', function() {
+        request('http://127.0.0.1:3000/' + invalidUnixQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody.natural).to.equal(null);
+          espect(parsedBody.unix).to.equal(null);
+          done();
+        });
+        request('http://127.0.0.1:3000/' + invalidNaturalQuery, function(error, response, body) {
+          var parsedBody = JSON.parse(body);
+          expect(parsedBody.natural).to.equal(null);
+          espect(parsedBody.unix).to.equal(null);
+          done();
+        });
+      });
+    })
   });
 });
