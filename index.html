@@ -6,11 +6,12 @@
   </head>
   <body>
     <header class="text-center">
-      <h1>Timestamp Microservice</h1>
+      <h1>Microservices</h1>
     </header>
-    <div class="well">
+    <div class="well" id="timestamp">
+      <h2 class="text-center">Timestamp</h2>
       <blockquote>
-      <h3 class="text-center">User Stories</h4>
+      <h4 class="text-center">User Stories</h4>
       <ol>
         <li>I can pass a string as a parameter, and it will check to see whether that string contains either a unix timestamp or a natural language date (example: January 1, 2016).</li>
         <li>If it does, it returns both the Unix timestamp and the natural language form of that date.</li>
@@ -18,12 +19,27 @@
       </ol>
       </blockquote>
       <div class="text-center"id="exmaples">
-        <h3>Example Usage (For Endpoint '/:date')</h3>
-        <code>/1450137600</code>
+        <h4>Example Usage (For Endpoint 'timestamp/:date')</h4>
+        <code>timestamp/1450137600</code>
         <br />
-        <code>/December%2015,%202015</code>
-        <h3>Example Output (For Above Queries)</h3>
+        <code>timestamp/December%2015,%202015</code>
+        <h4>Example Output (For Above Queries)</h4>
         <code>{"unix":1450137600,"natural":"December 15, 2015"}</code>
+      </div>
+    </div>
+    <div class="well" id="header-parser">
+      <h2 class="text-center">Request Header Parser</h2>
+      <blockquote>
+      <h4 class="text-center">User Stories</h4>
+      <ol>
+        <li>I can get the IP address, language and operating system for my browser.</li>
+      </ol>
+      </blockquote>
+      <div class="text-center"id="exmaples">
+        <h4>Example Usage (For Endpoint 'request-header-parser/')</h4>
+        <code>request-header-parser/</code>
+        <h3>Example Output (For Above Query)</h3>
+        <code>{"language":"en-US","software":"Macintosh; Intel Mac OS X 10_13_2","ipaddress":"127.0.0.1"}</code>
       </div>
     </div>
     <footer class="text-center">
