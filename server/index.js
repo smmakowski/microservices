@@ -31,6 +31,22 @@ app.get('/request-header-parser/*', (req, res) => {
   res.send(JSON.stringify(parserObj));
 });
 
+app.post('/url-shortener/new/:url', (req,res) => {
+  // add url to the database
+  // get the ID from the database or the new record (with monk or mongoose)
+  // send JSON response like...
+    // {original_url:'http://www.google.com',short_url:'https://little-url.herokuapp.com/8101'}
+
+});
+
+app.get('/url-shortener/:url', (req, res) => {
+  // check database for item where ID is number
+  // if found
+    // redirect to record's URL
+  // else
+    // send JSON response {error: 'This url is not in database.'}
+});
+
 app.listen(PORT, () => {
   console.log('App is listening on PORT ' + PORT);
 });
