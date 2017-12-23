@@ -1,11 +1,14 @@
 const helpers = require('../util/helpers.js');
+const ShortUrlClass = require('../ShortUrl.js');
+const validUrl = require('valid-url');
 const express = require('express');
 const path = require('path');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 const MongoClient = require('mongodb').MongoClient;
-const dbUrl = 'mongodb://localhost:27017';
+const rootUrl = process.env.ROOT_URL|| 'localhost:'
+const dbUrl = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const dbName = 'urlShortener';
 
 MongoClient.connect(dbUrl, (err, client) => {
@@ -44,7 +47,6 @@ MongoClient.connect(dbUrl, (err, client) => {
       res.json({error: 'No url provided.'});
     } else {
       res.json('Implement insertion please');
-
     }
     // add url to the database
     // get the ID from the database or the new record (with monk or mongoose)
@@ -56,14 +58,18 @@ MongoClient.connect(dbUrl, (err, client) => {
   app.get('/url-shortener/:url', (req, res) => {
     const collection = db.collection('urls');
     const num = parseInt(req.params.url, 10);
-    collection.find({short_url: num}).toArray((err, docs) => {
-      console.log('I found...', docs);
-      if (docs.length === 0) {
-        res.json({error: 'This url is not in database.'});
-      } else {
-        res.redirect(docs[0].original_url);
-      }
-    });
+    if (req.params.url === 'new') {
+      res.json({error: 'No url provided.'});
+    } else {
+      collection.find({shortUrl: num}).toArray((err, docs) => {
+        console.log('I found...', docs);
+        if (docs.length === 0) {
+          res.json({error: 'This url is not in database.'});
+        } else {
+          res.redirect(docs[0].original_url);
+        }
+      });
+    }
     // check database for item where ID is number
     // if found
       // redirect to record's URL
@@ -72,7 +78,7 @@ MongoClient.connect(dbUrl, (err, client) => {
   });
 
   app.listen(PORT, () => {
-    console.log('App is listening on PORT ' + PORT);
+    console.log(`Now listening on ${rootUrl}${PORT}`);
   });
 
 })
