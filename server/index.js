@@ -1,6 +1,7 @@
 const helpers = require('../util/helpers.js');
 const ShortUrlClass = require('../ShortUrl.js');
 const validUrl = require('valid-url');
+
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -46,7 +47,12 @@ MongoClient.connect(dbUrl, (err, client) => {
     if (req.params.url === '') { // fix me
       res.json({error: 'No url provided.'});
     } else {
-      res.json('Implement insertion please');
+      console.log(req.params.url);
+      if (validUrl.isUri(req.params.url)) {
+          res.json({error: 'Url provided is not a valid url.'});
+      } else {
+        res.json('Implement insertion please');
+      }
     }
     // add url to the database
     // get the ID from the database or the new record (with monk or mongoose)
