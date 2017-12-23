@@ -10,9 +10,9 @@ describe('ShortUrl class', function() {
   // const backtToNum = ShortUrl.decode(base64);
   console.log(base64);
   describe('encode', function() {
-    xit('should take a integer number and return base 64 string', function() {
+    it('should take a integer number and return base 64 string', function() {
       expect(base64).to.be.a('string');
-      expect(base64).to.equal('dnh');
+      expect(base64).to.equal('hnd');
     });
   });
   describe('decode', function() {
@@ -23,7 +23,7 @@ describe('ShortUrl class', function() {
   });
   describe('instance of ShortUrl', function() {
     xit('should have keys: originalUrl and shortUrl', function() {
-      // add tests here
+      expect()
     })
   });
 });
