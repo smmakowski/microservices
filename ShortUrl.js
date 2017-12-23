@@ -2,7 +2,7 @@ class ShortUrl {
 
   constructor(url, num) {
     this.originalUrl = url || '';
-    // this.shortUrl = this.encode(num) || '';
+    this.shortUrl = ShortUrl.encode(num) || '';
   }
   static encode(int) {
     const chars = 'abcdefjhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'; // BASE 62
@@ -14,12 +14,16 @@ class ShortUrl {
       int = Math.round(int / 62); // divide int
     }
 
-    return shortened;
+    return shortened.split('').reverse().join('');
   }
 
   static decode(string) {
-    const chars = '01234567890abcdefjhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let num = 1;
+    const chars = 'abcdefjhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    let num = 0;
+    for (let i = 0; i < string.length; i++) {
+      num = num * 62 + chars.indexOf(string[i]);
+    }
+    return num;
   }
 }
 

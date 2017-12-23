@@ -3,27 +3,32 @@ const chai = require('chai');
 const expect = chai.expect;
 
 describe('ShortUrl class', function() {
-  let inst = new ShortUrl();
+  let inst = new ShortUrl('http://www.google.com', 12345);
   console.log(inst);
   const num = 12345;
-  const base64 = ShortUrl.encode(num);
-  // const backtToNum = ShortUrl.decode(base64);
-  console.log(base64);
+  const shortString = ShortUrl.encode(num);
+  const backToNum = ShortUrl.decode(shortString);
+  console.log(shortString);
   describe('encode', function() {
     it('should take a integer number and return base 64 string', function() {
-      expect(base64).to.be.a('string');
-      expect(base64).to.equal('hnd');
+      expect(shortString).to.be.a('string');
+      expect(shortString).to.equal('dnh');
     });
   });
   describe('decode', function() {
-    xit('should take a base64 string and return an integer', function() {
-      expect(backtToNum).to.be.a('number');
+    it('should take a shortString string and return an integer', function() {
+      expect(backToNum).to.be.a('number');
       expect(backToNum).to.equal(12345);
     });
   });
   describe('instance of ShortUrl', function() {
-    xit('should have keys: originalUrl and shortUrl', function() {
-      expect()
-    })
+    it('should have keys with strings for value: originalUrl and shortUrl', function() {
+      expect(inst).to.have.keys('originalUrl', 'shortUrl');
+      expect(inst.originalUrl).to.be.a('string');
+      expect(inst.shortUrl).to.be.a('string');
+    });
+    it('should call encode within constructor when setting shortUrl field', function() {
+      expect(inst.shortUrl).to.equal('dnh');
+    });  
   });
 });
