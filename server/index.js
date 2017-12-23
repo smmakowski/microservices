@@ -37,40 +37,45 @@ MongoClient.connect(dbUrl, (err, client) => {
     req.headers['accept-language'], req.headers['user-agent']);
     console.log('PARSEROBJ = ', parserObj);
     console.log('PARSEOBJ TYPE ', typeof parserObj);
-    res.status(200);
+
     console.log(res.statusCode);
-    res.send(JSON.stringify(parserObj));
+    res.status(200).json(parserObj);
   });
 
   app.get('/url-shortener/new/:url*', (req,res) => {
     const urlsCollection = db.collection('urls');
     const urlsCountCollection = db.collection('urlsCount');
     let count;
+    const url = req.url.slice(19);
     // there are some issues with the url. it' cutting off the url at the first / in http:
-    ///
-    if (req.params.url === '') { // fix me
-      res.json({error: 'No url provided.'});
-    } else {
-      console.log(req.params.url);
-      if (validUrl.isUri(req.params.url)) {
-        urlsCountCollection.find({}).toArray((err, docs) =>{
-          count = docs[0].count;
-          console.log('BEFORE MOD', docs[0]);
-          const newShortUrl = new ShortUrl(req.params.url, count);
-          urlsCollection.insert(newShortUrl, function(err, doc){
-            urlsCountCollection.update(docs[0], {$set: {count: count + 1}}, (err, modded) => {
-              res.json(newShortUrl);
-            })
+
+    if (validUrl.isUri(url)) {
+      urlsCountCollection.find({}).toArray((err, docs) => { // get the count
+        if (err) {
+          res.json({error: 'A server error has occurred.'});
+        }
+        count = docs[0].count;
+        console.log('BEFORE MOD', docs[0]);
+        const newShortUrl = new ShortUrl(url, count); /// create new url obj for insertion
+        urlsCollection.insert(newShortUrl, function(err, doc) { // insert new site
+          if (err) {
+            res.json({error: 'A server error has occurred.'});
+          }
+          urlsCountCollection.update(docs[0], {$set: {count: count + 1}}, (err, modded) => { // update teh cound
+            if (err) {
+              res.json({error: 'A server error has occurred.'});
+            }
+            res.json(newShortUrl);
           });
-
-          // const shortenedObj = new ShortUrl(req.params.url, count);
-          // console.log(shortenedObj.shortUrl);
         });
+        // const shortenedObj = new ShortUrl(req.params.url, count);
+        // console.log(shortenedObj.shortUrl);
+      });
 
-      } else {
-        res.json({error: 'Url provided is not a valid url.'});
-      }
+    } else {
+      res.json({error: 'Url provided is not a valid url.'});
     }
+
     // add url to the database
     // get the ID from the database or the new record (with monk or mongoose)
     // send JSON response like...
@@ -80,23 +85,19 @@ MongoClient.connect(dbUrl, (err, client) => {
 
   app.get('/url-shortener/:url', (req, res) => {
     const collection = db.collection('urls');
-    if (req.params.url === 'new') {
+
+    if (req.url.slice(15) === 'new/') { // if url is like 'new/'' but without :url
       res.json({error: 'No url provided.'});
     } else {
-      collection.find({shortUrl: req.params.url}).toArray((err, docs) => {
+      collection.find({shortUrl: req.params.url}).toArray((err, docs) => { // look for short in db
         console.log('I found...', docs);
-        if (docs.length === 0) {
-          res.json({error: 'This url is not in database.'});
-        } else {
+        if (docs.length === 0) { // if not then send
+          res.json({error: 'This short url is not in database.'});
+        } else { // redirect to url
           res.redirect(docs[0].originalUrl);
         }
       });
     }
-    // check database for item where ID is number
-    // if found
-      // redirect to record's URL
-    // else
-      // send JSON response {error: 'This url is not in database.'}
   });
 
   app.listen(PORT, () => {
