@@ -29,6 +29,6 @@ describe('ShortUrl class', function() {
     });
     it('should call encode within constructor when setting shortUrl field', function() {
       expect(inst.shortUrl).to.equal('dnh');
-    });  
+    });
   });
 });

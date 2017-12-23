@@ -14,13 +14,13 @@ class ShortUrl {
       int = Math.round(int / 62); // divide int
     }
 
-    return shortened.split('').reverse().join('');
+    return shortened.split('').reverse().join(''); // reverse to skip this step/decrement in decode.
   }
 
   static decode(string) {
     const chars = 'abcdefjhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     let num = 0;
-    for (let i = 0; i < string.length; i++) {
+    for (let i = 0; i < string.length; i++) { 
       num = num * 62 + chars.indexOf(string[i]);
     }
     return num;
