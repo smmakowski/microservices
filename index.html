@@ -18,7 +18,7 @@
         <li>If it does not contain a date or Unix timestamp, it returns null for those properties.</li>
       </ol>
       </blockquote>
-      <div class="text-center"id="exmaples">
+      <div class="text-center"id="examples">
         <h4>Example Usage (For Endpoint 'timestamp/:date')</h4>
         <code>timestamp/1450137600</code>
         <br />
@@ -35,11 +35,32 @@
         <li>I can get the IP address, language and operating system for my browser.</li>
       </ol>
       </blockquote>
-      <div class="text-center"id="exmaples">
+      <div class="text-center"id="examples">
         <h4>Example Usage (For Endpoint 'request-header-parser/')</h4>
         <code>request-header-parser/</code>
-        <h3>Example Output (For Above Query)</h3>
+        <h4>Example Output (For Above Query)</h4>
         <code>{"language":"en-US","software":"Macintosh; Intel Mac OS X 10_13_2","ipaddress":"127.0.0.1"}</code>
+      </div>
+    </div>
+    <div class="well" id="url-shortener">
+      <h2 class="text-center">URL Shortener</h2>
+      <blockquote>
+      <h4 class="text-center">User Stories</h4>
+      <ol>
+        <li>I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.</li>
+        <li>If I pass an invalid URL that doesn't follow the valid http://www.example.com format, the JSON response will contain an error instead.</li>
+        <li>When I visit that shortened URL, it will redirect me to my original link.</li>
+      </ol>
+      </blockquote>
+      <div class="text-center"id="examples">
+        <h4>Example Usage (For Endpoint 'url-shortener/new/:url')</h4>
+        <code>url-shortener/new/http://www.freecodecamp.org</code>
+        <h4>Example Output (For Above Query)</h4>
+        <code>{"originalUrl":"http://www.freecodecamp.org","shortUrl":"b3Za"}</code>
+        <h4>Example Usage (For Endpoint 'url-shortener/:url')</h4>
+        <code>url-shortener/b3Za</code>
+        <h4>Example Output (For Above Query)</h4>
+        <code>/* redirect to http://www.frecodecamp.org */</code>
       </div>
     </div>
     <footer class="text-center">

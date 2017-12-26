@@ -12,10 +12,12 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.1",
+    "e": "0.0.4",
     "express": "^4.16.2",
     "mongodb": "^3.0.0-rc0",
     "mongoose": "^4.13.7",
     "node-static": "^0.7.10",
+    "path": "^0.12.7",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
